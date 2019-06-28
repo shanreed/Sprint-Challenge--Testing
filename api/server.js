@@ -1,6 +1,7 @@
 const express = require('express');
 
-const Games = require('../games/games-model.js');
+// const Games = require('../games/games-model.js');
+const db = require('../database/dbConfig.js');
 
 const server = express();
 
@@ -11,7 +12,7 @@ server.get('/', (req, res) => {
 });
 
 server.get('/games', (req, res) => {
-  Games.getAll()
+  db.getAll()
     .then(games => {
       res.status(200).json(games);
     })
@@ -24,10 +25,9 @@ server.post('/games', async (req, res) => {
   const game = req.body;
   try {
     const result = await db.insert(game).into('games');
-    
     res.status(201).json(result);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(422).json(err);
   }
 });
 
